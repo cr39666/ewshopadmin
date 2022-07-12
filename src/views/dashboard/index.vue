@@ -1,12 +1,11 @@
 <template>
-  <Div>
-    LOGIN
-  </Div>
-
+主控面板
 </template>
 
-<script setup>
-
+<script>
+export default {
+  name: "index"
+}
 </script>
 
 <style scoped>

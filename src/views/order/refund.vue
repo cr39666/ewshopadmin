@@ -1,11 +1,13 @@
 <template>
   <div>
-    HOME
+    退款订单
   </div>
 </template>
 
-<script setup>
-
+<script>
+export default {
+  name: "refund"
+}
 </script>
 
 <style scoped>
