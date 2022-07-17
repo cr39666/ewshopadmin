@@ -34,7 +34,8 @@ request.interceptors.response.use((response)=>{
             window.$message.error('接口不存在')
             break;
         case 422:
-            window.$message.error('参数错误')
+            let msg=response.data.errors[Object.keys(response.data.errors)[0]][0]
+            window.$message.error(msg)
             break
         case 500:
         case 502:

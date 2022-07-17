@@ -7,7 +7,7 @@
     >
       <n-card
           style="width: 600px"
-          title="添加用户"
+          title="添加轮播图"
           :bordered="false"
           size="huge"
           role="dialog"
@@ -20,25 +20,28 @@
           >&times;</span>
         </template>
         <n-form ref="formRef" :model="model" :rules="rules">
-          <n-form-item path="name" label="姓名">
-            <n-input v-model:value="model.name" placeholder="请输入姓名"/>
+          <n-form-item path="title" label="标题">
+            <n-input v-model:value="model.title" placeholder="请输入标题"/>
           </n-form-item>
-          <n-form-item path="email" label="邮箱">
+          <n-form-item path="url" label="跳转链接">
             <n-input
-                v-model:value="model.email"
+                v-model:value="model.url"
                 type="email"
-                placeholder="请输入邮箱"
+                placeholder="请输入跳转URL"
             />
           </n-form-item>
-          <n-form-item
-              path="password"
-              label="密码"
-          >
-            <n-input
-                v-model:value="model.password"
-                type="password"
-                placeholder="请输入密码"
-            />
+          <n-form-item label="是否启用" path="status">
+            <n-radio-group v-model:value="model.status" name="status">
+              <n-radio :value="0">
+                否
+              </n-radio>
+              <n-radio :value="1">
+               是
+              </n-radio>
+            </n-radio-group>
+          </n-form-item>
+          <n-form-item label="图片上传" path="img">
+            <Upload @backKey="backKey"></Upload>
           </n-form-item>
           <n-row :gutter="[0, 24]">
             <n-col :span="24">
@@ -46,7 +49,7 @@
                 <n-button
                     round
                     type="primary"
-                    @click="userSubmit"
+                    @click="slideSubmit"
                 >
                   添加
                 </n-button>
@@ -60,8 +63,9 @@
 </template>
 
 <script setup>
-import {h,ref,defineProps,defineEmits} from "vue";
-import {addUser} from "@/api/users";
+import {ref} from "vue";
+import {addslides} from "@/api/slide";
+import Upload from '@/components/Upload/index.vue'
 
 const props=defineProps({
   showModal:{
@@ -70,43 +74,57 @@ const props=defineProps({
   }})
 const emit=defineEmits(['checkShowModal'])
 const model = ref({
-  name: null,
-  email: null,
-  password: null
+  title: null,
+  img: null,
+  url: null,
+  status:null,
 })
 const rules = {
-  name: [
+  title: [
     {
       required: true,
-      message: '请输入姓名'
+      message: '请输入标题'
     }
   ],
-  email: [
+  img: [
     {
       required: true,
-      message: '请输入邮箱'
+      message: '请上传图片'
     }
   ],
-  password: [
+  url: [
     {
       required: true,
-      message: '请输入密码'
+      message: '请输入跳转链接'
+    }
+  ],
+  status: [
+    {
+      required: true,
+      message: '是否禁用'
     }
   ]
 }
 const formRef=ref()
-const userSubmit=(e)=>{
+const slideSubmit = (e)=>{
   e.preventDefault()
   formRef.value.validate(errors=>{
     if(errors){
-      console.log(errors);
+      console.log(errors)
     }else{
-      addUser(model.value).then(res=>{
+      // 请求API 添加数据
+      addslides(model.value).then(res=>{
+        console.log(res)
+        window.$message.success('添加成功')
         emit('checkShowModal',false)
         emit('reloadTable')
       })
+      console.log(model.value)
     }
   })
+}
+const backKey=(key)=>{
+  model.value.img=key
 }
 </script>
 

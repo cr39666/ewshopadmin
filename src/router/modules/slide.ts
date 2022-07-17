@@ -1,19 +1,20 @@
+//轮播图路由
 import {RouteRecordRaw} from 'vue-router'
 import {renderIcon} from "@/utils";
-import {PersonCircle} from "@vicons/ionicons5";
+import {PlaySkipForwardCircleSharp} from "@vicons/ionicons5";
 const Layout=()=>import('@/layout/index.vue')
 
-const routeName ='users'
+const routeName ='slide'
 
 const routes: Array<RouteRecordRaw> = [
     {
-        path:'/users',
+        path:'/slide',
         name:routeName,
         component:Layout,
-        redirect:'/users/list',
+        redirect:'/slide/list',
         meta:{
-            title:'用户管理',
-            icon:renderIcon(PersonCircle),
+            title:'轮播图管理',
+            icon:renderIcon(PlaySkipForwardCircleSharp),
             sort:1
         },
         children:[
@@ -21,9 +22,9 @@ const routes: Array<RouteRecordRaw> = [
                 path:'list',
                 name:`${routeName}_list`,
                 meta:{
-                    title:'用户列表'
+                    title:'轮播图管理'
                 },
-                component:()=> import('@/views/user/index.vue')
+                component:()=> import('@/views/slide/index.vue')
             }
         ]
     }

@@ -1,19 +1,19 @@
 import {RouteRecordRaw} from 'vue-router'
 import {renderIcon} from "@/utils";
-import {PersonCircle} from "@vicons/ionicons5";
+import {CubeSharp} from "@vicons/ionicons5";
 const Layout=()=>import('@/layout/index.vue')
 
-const routeName ='users'
+const routeName ='goods'
 
 const routes: Array<RouteRecordRaw> = [
     {
-        path:'/users',
+        path:'/goods',
         name:routeName,
         component:Layout,
-        redirect:'/users/list',
+        redirect:'/goods/list',
         meta:{
-            title:'用户管理',
-            icon:renderIcon(PersonCircle),
+            title:'商品管理',
+            icon:renderIcon(CubeSharp),
             sort:1
         },
         children:[
@@ -21,9 +21,9 @@ const routes: Array<RouteRecordRaw> = [
                 path:'list',
                 name:`${routeName}_list`,
                 meta:{
-                    title:'用户列表'
+                    title:'商品列表'
                 },
-                component:()=> import('@/views/user/index.vue')
+                component:()=> import('@/views/goods/index.vue')
             }
         ]
     }

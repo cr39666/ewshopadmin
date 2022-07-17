@@ -18,16 +18,9 @@ Object.keys(modules).forEach((key:string)=>{
 const routes = [
     {
         path: '/',
-        component: Home,
+        component: Login,
         meta:{
-            title:'Ewshop',
-        }
-    },
-    {
-        path: '/home',
-        component: Home,
-        meta:{
-            title:'Ewshop',
+            title:'登录',
         }
     },
     {
@@ -38,6 +31,14 @@ const routes = [
             title:'登录',
         }
     },
+    {
+        path: '/home',
+        component: Home,
+        meta:{
+            title:'Ewshop',
+        }
+    },
+
 ]
 
 
@@ -52,7 +53,7 @@ const router =createRouter({
 })
 
 router.beforeEach((to,from,next)=>{
-    console.log(to,from);
+    // console.log(to,from);
     //修改页面标题
     // console.log(to.meta.title)
     document.title=(to?.meta?.title as string)||document.title;

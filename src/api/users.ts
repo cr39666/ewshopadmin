@@ -17,7 +17,24 @@ export function addUser(data){
     return request(
         {
             url:'/api/admin/users',
-            method:'POSt',
+            method:'POST',
+            data
+        }
+    )
+}
+export function getUserInfo(userid){
+    return request(
+        {
+            url:`/api/admin/users/${userid}`,
+            method:'GET'
+        }
+    )
+}
+export function updateUser(userid,data){
+    return request(
+        {
+            url:`/api/admin/users/${userid}`,
+            method:'PUT',
             data
         }
     )

@@ -14,6 +14,7 @@ const routes: Array<RouteRecordRaw> = [
         meta:{
             title:'主控面板',
             icon:renderIcon(ColorFilter),
+            sort:0,
         },
         children:[
             {

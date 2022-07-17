@@ -2,11 +2,7 @@
   <div>
     <div>
       <div class="h-8 w-full bg-white pl-4 mb-4">
-        <span class="text-slate-400 pr-1">首页</span> / <span class="pl-1">用户列表</span>
-<!--        <div class="pt-3 text-xl text-black font-bold">-->
-<!--          用户管理-->
-<!--        </div>-->
-
+        <span class="text-slate-400 pr-1">首页</span> / <span class="pl-1">轮播图列表</span>
       </div>
     </div>
     <div class="content px-4">
@@ -19,11 +15,11 @@
             :label-width="80"
             :model="formSearch"
         >
-          <n-form-item label="姓名" path="name">
-            <n-input v-model:value="formSearch.name" placeholder="输入姓名" />
+          <n-form-item label="轮播图" path="title">
+            <n-input v-model:value="formSearch.title" placeholder="输入轮播图名称" />
           </n-form-item>
-          <n-form-item label="邮箱" path="email">
-            <n-input v-model:value="formSearch.email" placeholder="输入邮箱" />
+          <n-form-item label="跳转链接" path="url">
+            <n-input v-model:value="formSearch.url" placeholder="输入跳转链接" />
           </n-form-item>
           <n-form-item class="ml-auto">
             <n-button attr-type="button" @click="searchReset" class="mr-4">
@@ -37,10 +33,10 @@
       </div>
       <div class="bg-white">
         <div class="text-xl px-6 pb-4 flex">
-          <span>用户列表</span>
+          <span>轮播图列表</span>
           <span class="ml-auto">
             <NButton size="small" round  type="info" @click="showModal=true">
-              + 新建</NButton>
+              + 添加</NButton>
           </span>
         </div>
         <div>
@@ -55,8 +51,7 @@
             <n-pagination v-model:page="page" @update:page="updatePage"  :page-count="totalPages" />
           </div>
         </div>
-        <AddUser v-if="showModal" :showModal="showModal" @checkShowModal="checkShowModal" @reloadTable="reload"></AddUser>
-        <EditUser v-if="showEditModal" :user_id="user_id" :showModal="showEditModal" @checkShowModal="checkEditModal" @reloadTable="reload"></EditUser>
+        <AddGoods v-if="showModal" :showModal="showModal" @checkShowModal="checkShowModal" @reloadTable="reload"></AddGoods>
       </div>
     </div>
   </div>
@@ -64,13 +59,15 @@
 
 <script setup lang="ts">
 import {ref, h,onMounted } from 'vue'
-import { useMessage,NAvatar,NSwitch, NButton,useLoadingBar } from 'naive-ui'
-import AddUser from './components/AddUser.vue'
-import EditUser from './components/EditUser.vue'
-import {users} from '@/api/users'
-
+import { useMessage,NImage,NSwitch, NButton,useLoadingBar } from 'naive-ui'
+import AddGoods from './components/AddGoods.vue'
+import {slides} from '@/api/slide'
+//加载条
 const loadingbar=useLoadingBar()
-const formSearch =ref({name:'', email:''})
+const formSearch =ref({
+  title:'',
+  url:''
+})
 const showModal =ref(false)
 const pagination=  ref(false as const)
 const page=ref(1)
@@ -81,32 +78,30 @@ const data=ref([])
 const checkShowModal = (status) => {
   showModal.value=status
 }
-//编辑模态框
-const showEditModal=ref(false)
-const user_id=ref('')
-const checkEditModal=(show:boolean)=>{
-  showEditModal.value=show
-}
+
 const columns=[
   {
-    title: '头像',
-    key: 'avatar_url',
+    title: '轮播图图片',
+    key: 'img',
     render(row){
-      return h(NAvatar,{round:true,src:row.avatar_url,size:'medium'}
-      )
+      return h(NImage,{
+        width:'100',
+        alt:'加载失败',
+        src:row.img_url,
+      })
     }
   },
   {
-    title: '姓名',
-    key: 'name'
+    title: '轮播图名称',
+    key: 'title'
   },
   {
-    title: '邮箱',
-    key: 'email'
+    title: '跳转链接',
+    key: 'url'
   },
   {
-    title: '是否禁用',
-    key: 'is_locked',
+    title: '禁用状态',
+    key: 'status',
     //???***鼠标点击开关事件完成
     render(row){
       return h(NSwitch,{
@@ -120,7 +115,7 @@ const columns=[
     }
   },
   {
-    title: '创建时间',
+    title: '添加时间',
     key: 'created_at'
   },
   {
@@ -132,55 +127,56 @@ const columns=[
         color:'#1890ff',
         strong:true,
         onClick:()=>{
-          user_id.value=row.id
-          showEditModal.value=true
+
         }
       },'编辑')
 
     }
   }
 ]
+//重置
 const searchReset = () => {
-  getUserList({}),
+  getSlides({}),
       formSearch.value={
-        name:'',
-        email:'',
+        title:'',
+        url:'',
       }
 }
+//搜索
 const searchSubmit=(e)=>{
   e.preventDefault()
-  getUserList({
-    name:formSearch.value.name,
-    email:formSearch.value.email,
+  getSlides({
+    name:formSearch.value.title,
+    email:formSearch.value.url,
     current:1
   })
 }
 onMounted(()=>{
-  getUserList({})
+  getSlides({})
 })
 const updatePage=(pageNum)=>{
-  getUserList({
+  getSlides({
     current:pageNum,
-    name:formSearch.value.name,
-    email:formSearch.value.email,
+    name:formSearch.value.title,
+    email:formSearch.value.url,
   })
 }
-const getUserList=(params)=>{
+const getSlides=(params)=>{
   loadingbar.start()
-  users(params).then(users=>{
-    data.value=users.data
-    totalPages.value=users.meta.pagination.total_pages
-    page.value=users.meta.pagination.current_page
+  slides(params).then(res_slide=>{
+    data.value=res_slide.data
+    totalPages.value=res_slide.meta.pagination.total_pages
+    page.value=res_slide.meta.pagination.current_page
     loadingbar.finish()
   }).catch(err=>{
     loadingbar.error()
   })
 }
 const reload=()=>{
-  getUserList({
+  getSlides({
     current:page.value,
-    name:formSearch.value.name,
-    email:formSearch.value.email,
+    title:formSearch.value.title,
+    url:formSearch.value.url,
   })
 }
 </script>
