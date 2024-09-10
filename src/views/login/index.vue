@@ -16,7 +16,11 @@
             :rules="rules"
         >
           <n-form-item path="username">
-            <n-input v-model:value="formInline.username" placeholder="请输入邮箱">
+            <n-input 
+              v-model:value="formInline.username" 
+              placeholder="请输入邮箱" 
+              :input-props="{autocomplete: 'username'}"
+            >
               <template #prefix>
                 <n-icon size="18" color="#808695">
                   <PersonOutline />
@@ -27,6 +31,7 @@
           <n-form-item path="password">
             <n-input
                 v-model:value="formInline.password"
+                :input-props="{autocomplete: 'current-password'}"
                 type="password"
                 showPasswordOn="click"
                 placeholder="请输入密码"
@@ -51,20 +56,20 @@
 
 <script lang="ts" setup>
 import { reactive, ref } from 'vue';
-import { PersonOutline, LockClosedOutline} from '@vicons/ionicons5';
-import {useUserStore} from "@/store/user";
-import {useRouter} from "vue-router";
+import { PersonOutline, LockClosedOutline } from '@vicons/ionicons5';
+import { useUserStore } from "@/store/user";
+import { useRouter } from "vue-router";
 import { useMessage } from 'naive-ui'
 
 
-const message=useMessage();
+const message = useMessage();
 window.$message = useMessage()
 interface FormState {
   email: string;
   password: string;
 }
-const userStore=useUserStore();
-const router=useRouter();
+const userStore = useUserStore();
+const router = useRouter();
 const formRef = ref();
 const loading = ref(false)
 const formInline = reactive({
@@ -75,34 +80,34 @@ const rules = {
   username: { required: true, message: '请输入邮箱', trigger: 'blur' },
   password: { required: true, message: '请输入密码', trigger: 'blur' },
 };
-const handleSubmit = (e:Event)=>{
+const handleSubmit = (e: Event) => {
   //阻止默认事件执行
   // e.preventDefault();
   // 表单验证
-  formRef.value.validate(async (error:any)=>{
-    if(error){
+  formRef.value.validate(async (error: any) => {
+    if (error) {
       return;
     }
     // 接收数据
-    const {username,password} = formInline;
+    const { username, password } = formInline;
     // 调整数据结构
     const data: FormState = {
-      email:username,
+      email: username,
       password,
     }
     // 显示登陆中
     loading.value = true;
     // 执行登陆操作
-    userStore.login(data).then(res=>{
+    userStore.login(data).then(res => {
       //关闭登录按钮转圈圈
       // 成功后跳转到首页
       // 失败后提示
-      loading.value=false;
+      loading.value = false;
       message.success("登录成功",
-          { duration: 500 })
-      router.push({name:'dashboard'})
-    }).catch(err=>{
-      loading.value=false;
+        { duration: 500 })
+      router.push({ name: 'dashboard' })
+    }).catch(err => {
+      loading.value = false;
       message.error('登录失败')
     })
   });

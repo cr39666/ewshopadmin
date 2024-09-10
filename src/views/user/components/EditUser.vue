@@ -51,7 +51,7 @@
 </template>
 
 <script setup>
-import {h, ref, defineProps, defineEmits, onMounted} from "vue";
+import {h, ref, defineEmits, onMounted} from "vue";
 import {addUser,getUserInfo,updateUser} from "@/api/users";
 
 const props=defineProps({

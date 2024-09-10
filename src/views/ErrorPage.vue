@@ -1,6 +1,6 @@
 <template>
   <div>
-    HOME
+    遇到错误
   </div>
 </template>
 

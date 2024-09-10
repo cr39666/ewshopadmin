@@ -3,7 +3,7 @@ import { ReceiptSharp} from "@vicons/ionicons5";
 import {renderIcon} from "@/utils";
 const Layout=()=>import('@/layout/index.vue')
 
-const routeName ='dashboard'
+const routeName ='order'
 
 const routes: Array<RouteRecordRaw> = [
     {

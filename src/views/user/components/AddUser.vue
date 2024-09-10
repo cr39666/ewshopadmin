@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import {h,ref,defineProps,defineEmits} from "vue";
+import {h,ref,defineEmits} from "vue";
 import {addUser} from "@/api/users";
 
 const props=defineProps({
